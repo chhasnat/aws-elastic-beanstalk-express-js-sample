@@ -5,12 +5,12 @@ pipeline {
         }
     }
     stages {
-        stage('Install') {
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install --save'
             }
         }
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 sh 'npm test'
             }
@@ -20,19 +20,20 @@ pipeline {
                 sh 'npm audit --audit-level high'
             }
         }
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    def image = docker.build("your-dockerhub-username/app:${BUILD_NUMBER}")
+                    def image = docker.build("muhammadhassnat/app:${BUILD_NUMBER}")
                 }
             }
         }
-        stage('Push Image') {
+        stage('Push to Registry') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        def image = docker.image("your-dockerhub-username/app:${BUILD_NUMBER}")
+                    docker.withRegistry('', 'dockerhub-credentials') {
+                        def image = docker.image("muhammadhassnat/app:${BUILD_NUMBER}")
                         image.push()
+                        image.push('latest')
                     }
                 }
             }
