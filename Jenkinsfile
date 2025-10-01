@@ -33,6 +33,7 @@ pipeline {
         stage('Snyk Security Scan') {
             steps {
                 sh '''
+                   npm install -g snyk
                    snyk test --severity-threshold=high
                    snyk monitor --org=chhasnat
                 '''
