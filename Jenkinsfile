@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker { image 'node:16' }   // Use Node.js 16 Docker image as agent
+        docker { image 'node:16' }   // Node.js 16 build agent
     }
     stages {
         stage('Install Dependencies') {
@@ -11,6 +11,15 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh 'npm test'             // Run unit tests
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                sh '''
+                  npm install -g snyk
+                  snyk auth ${SNYK_TOKEN}
+                  snyk test --severity-threshold=high
+                '''
             }
         }
         stage('Build Docker Image') {
