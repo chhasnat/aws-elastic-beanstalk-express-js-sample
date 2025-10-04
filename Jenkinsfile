@@ -35,7 +35,7 @@ pipeline {
                 sh '''
                    npm install -g snyk
                    snyk test --severity-threshold=high
-                   snyk monitor --org=chhasnat
+                   snyk monitor --org=salarhaider
                 '''
             }
         }
